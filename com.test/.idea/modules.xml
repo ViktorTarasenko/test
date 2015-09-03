@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/com.test.iml" filepath="$PROJECT_DIR$/com.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/com.test-ear/com.test-ear.iml" filepath="$PROJECT_DIR$/com.test-ear/com.test-ear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/com.test-ejb/com.test-ejb.iml" filepath="$PROJECT_DIR$/com.test-ejb/com.test-ejb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/com.test-web/com.test-web.iml" filepath="$PROJECT_DIR$/com.test-web/com.test-web.iml" />
+    </modules>
+  </component>
+</project>

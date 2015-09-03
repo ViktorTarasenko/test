@@ -1,0 +1,92 @@
+<!-- Plain HTML page that kicks us into the app -->
+
+<html>
+<head>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+ <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+ <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript">
+ $(function() {
+    $( "#birthDate" ).datepicker();
+    $( "#new" ).click(function() {
+  		$.ajax({
+        url: "rest/persons/save",
+        type: "POST",
+        data: JSON.stringify({ name: $( "#name").val(), surname: $( "#surname").val(), patronymic: $( "#patronymic").val() , 
+        birthDate: $.datepicker.parseDate("mm/dd/yy",  $("#birthDate").val())}),
+        contentType: "application/json",
+        success: function (result) {
+           alert("user added");
+           reloadPersons();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.responseText);
+        }
+    });
+	});
+	function reloadPersons() {
+		$.getJSON( "rest/persons/all", function( data ) {
+			$("#users tbody").empty();
+  			var items = [];
+  $.each( data, function(key,val ) {
+  	var name = val['name'];
+  	var surname = val['surname'];
+  	var patronymic = val['patronymic'];
+  	var birthDate = $.datepicker.formatDate("mm/dd/yy",new Date(parseInt(val['birthDate'])));
+    var html = "<tr><td><input type='text' value='"+name+"'></td> <td><input type='text' value='"+surname+"'></input></td> <td><input type='text' value='"+patronymic+"'></input></td> <td><input type='text' datepicker value='"+birthDate+"'></input></td><td><button userid='"+val["id"]+"'>Редактировать</button><td/> </tr>";
+    //alert(html);
+    $("#users tbody").append(html);
+    	$( "input[userid]"  ).datepicker();
+    	$( "button[userid]").click(function() {
+    		//alert($(this).parent().parent().children().eq(0).children().eq(0).val());
+    			$.ajax({
+        url: "rest/persons/update/"+$(this).attr("userid"),
+        type: "PUT",
+        data: JSON.stringify({ name: $(this).parent().parent().children().eq(0).children().eq(0).val(), surname: $(this).parent().parent().children().eq(1).children().eq(0).val(), patronymic: $(this).parent().parent().children().eq(2).children().eq(0).val() , 
+        birthDate: $.datepicker.parseDate("mm/dd/yy",  $(this).parent().parent().children().eq(3).children().eq(0).val())}),
+        contentType: "application/json",
+        success: function (result) {
+           alert("user edited");
+           reloadPersons();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.responseText);
+        }
+    });
+  		
+	});
+  });
+
+ 
+ 
+  		
+	});
+	}
+	reloadPersons();
+  });
+</script>
+</head>
+<body>
+	<table id="users">
+		<caption>Пользователи</caption>
+   <tr>
+    <th>Имя</th>
+    <th>Фамилия</th>
+    <th>Отчество</th>
+    <th>Дата рождения</th>
+   </tr>
+	</table>
+	<div >
+  	<p><b>Новый пользователь</b></p>
+  	<p>Имя пользователя</p>
+  <input type="text" id="name" name="name" ></input>
+  <p>Фамилия</p>
+  <input type="text" id="surname" name="surname"></input>
+    <p>Отчество</p>
+  <input type="text" id="patronymic" name="patronymic"></input>
+  <p>Дата рождения</p>
+  <input type="text" id="birthDate" name="birthDate"></input>
+  <p><button id="new"/>Сохранить</p>
+ </div>	
+</body>
+</html>
